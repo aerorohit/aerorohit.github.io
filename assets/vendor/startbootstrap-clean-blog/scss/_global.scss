@@ -1,4 +1,5 @@
 // Global styling for this template
+
 body {
   font-size: 20px;
   color: $gray-900;
@@ -74,4 +75,18 @@ img::selection {
 img::-moz-selection {
   color: $white;
   background: transparent;
+}
+
+
+
+
+pre,
+code {
+    font-size: 15px;
+    // font-family: monospace;
+    // color: rgb(186, 186, 202);
+    // border: 1px solid #eef;
+    padding: 5px;
+    border-radius: 5px;
+    // background-color: rgb(12, 12, 20);
 }
