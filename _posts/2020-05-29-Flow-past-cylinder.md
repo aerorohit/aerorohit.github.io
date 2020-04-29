@@ -121,11 +121,11 @@ The simulation looks like this!!
 
 <!-- [<img src="/img/master.gif" width="800"/>](/img/master.gif) -->
 
-<iframe width="907" height="397" src="https://www.youtube.com/embed/SE9kUbG_cf4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="397" src="https://www.youtube.com/embed/SE9kUbG_cf4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Before going to get to that final simulation, I performed boundaryless simulations of vortex sheets and patches have a look at some of them.
 
-<iframe width="873" height="491" src="https://www.youtube.com/embed/s2dbctRlhdQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="491" src="https://www.youtube.com/embed/s2dbctRlhdQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 For further details, visit my repository [here]( https://github.com/aerorohit/Vortex_method ).
 
