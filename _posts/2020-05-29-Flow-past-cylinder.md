@@ -129,4 +129,4 @@ Before going to get to that final simulation, I performed boundaryless simulatio
 
 For further details, visit my repository [here]( https://github.com/aerorohit/Vortex_method ).
 
-Thank 
+Thank you!
