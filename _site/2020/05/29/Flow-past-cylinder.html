@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Particle based approach for simulating flow over a cylinder - Aeroro
+    
+  </title>
+
+  <meta name="description" content="In the mainstream CFD, mostly, mesh-based methods are used. Such methods are widely used in the engineering community. But these methods have some drawbacks ...">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome-free/css/all.min.css">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="shortcut icon" type="image/png" href="/img/icon.png">
+  <link rel="canonical" href="http://localhost:4000/2020/05/29/Flow-past-cylinder.html">
+  <link rel="alternate" type="application/rss+xml" title="Aeroro" href="/feed.xml">
+
+</head>
+
+
+<body style="background-color:rgb(120, 124, 123);">
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container" >
+    <a class="navbar-brand" href="/">Aeroro</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li> -->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<!-- Page Header -->
+
+<header class="masthead" style="background-image: url('/img/b.png')">
+  
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Particle based approach for simulating flow over a cylinder</h1>
+            
+            <h2 class="subheading"></h2>
+            
+            <span class="meta">Posted by
+              <a href="#">Rohit</a>
+              on May 29, 2020 &middot; <span class="reading-time" title="Estimated read time">
+  
+   7 mins  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>In the mainstream CFD, mostly, mesh-based methods are used. Such methods are widely used in the engineering community. But these methods have some drawbacks as generating meshes is a bit cumbersome work and mainly affects the performance of your simulation results. In this regard, meshless approaches are more convenient.</p>
+
+<p>There are multiple ways to simulate using particle methods, and I will be talking about the Vortex Blob method for 2D problems. In which, we have particles (or blobs) that have vorticity, and they interact in a way so as to simulate the real fluid flow.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>Everything starts with our good old friend Navier Stokes Equation. Just to refresh your memory it is..</p>
+
+<script type="math/tex; mode=display">\rho \frac{\partial\bar{v}}{\partial t} + \rho (\bar{v}\cdot\nabla) \bar{v} = -\nabla p + \mu \nabla^2 \bar{v}</script>
+
+<p>We have neglected gravity here. And as we are using the vortex blob method, we need to represent this in the form of vorticity and velocity. After taking the curl of the  NS equation we get-</p>
+
+<script type="math/tex; mode=display">\underbrace{\frac{D\bar{\omega}}{Dt}}_{advection} =\underbrace{\bar{\omega}\nabla{\bar{v}}}_{stretching} - \underbrace{\nu\nabla^2 \bar{\omega}}_{diffusion}</script>
+
+<p>As mentioned below each term, the first term is an advection term second one is for vorticity stretching, and the third one is for diffusion. Also, for 2D problems, vorticity stretching is zero. Now for simplicity, if we consider an inviscid case, then we have to solve  <script type="math/tex">\frac{D\bar{\omega}}{Dt} =0</script> on the given domain.Now, if we discretize the vorticity on the domain using particles, then we can simulate inviscid flow. Still, there is a problem with how do we find the velocity of each particle given the vorticity field. Without getting into the mathematics, I would directly state here.</p>
+
+<script type="math/tex; mode=display">(u, v) = k_\delta * \omega</script>
+
+<p>here <script type="math/tex">k_\delta</script> is called kernel. It depends on boundary conditions in the flow under consideration. For point vortex with no boundaries kernel is 
+<script type="math/tex">\frac{1}{2\pi r^2}(-y, x)</script></p>
+
+<p>Now for a system of N particles, the velocity of the ith particle is given by representing convolution integral by summation.The integral and summation are mentioned below. Please note that integral over vorticity is replaced with circulation.</p>
+
+<script type="math/tex; mode=display">(u,v) = \iint k(x-x', y-y') \omega(x', y') dx'dy'</script>
+
+<script type="math/tex; mode=display">(u, v) = \sum_{j=1}^{\infty}\Gamma _jk(x-x', y-y')</script>
+
+<p>There is also another problem with using point vortices, singularity. Because of this, we get nonphysical numerical solutions. We can use several other non-singular kernels.</p>
+
+<p>Viscosity is similar to the heat equation; it is just the dissipation of energy. It turns out that we can simulate the effect of viscosity by adding gaussian noise to the position of the system with mean 0 and variance <script type="math/tex">\sqrt{2\nu\Delta t}</script>.</p>
+
+<p>Now that we know each contributing terms our new governing equation is</p>
+
+<script type="math/tex; mode=display">\frac{D\bar{\omega}}{Dt} = \nu \nabla^2\omega</script>
+
+<p>We can numerically solve this using operator splitting. It means we solve advection and diffusion separately at each time step. Doing this introduces penalty in terms of an error of the order <script type="math/tex">O(\nu\Delta t)</script>, which is acceptable.Now let’s dig into the implementation part.</p>
+
+<p>We have not yet discussed implementing the no-slip boundary condition. We add blobs at the control point (points over the boundary at which we satisfied no penetration) having total circulation that is equal to the circulation of panels used to satisfy no penetration. These new blobs satisfy the no-slip at control points. The number of blobs can be varied; constraint is just that their total circulation should add up as mentioned before.</p>
+
+<h2 id="implementation">Implementation</h2>
+<p>For the advection part, we have to calculate velocities due to all other blobs at each blob. For Krasny blob function for velocity field is given below. Velocity function for Krasny blob is-</p>
+
+<p><script type="math/tex">(u, v)_i=\sum_{j=1, j\ne i}^{\infty}(-y,x)\frac{1}{2\pi (r_j^2+\delta^2)}</script></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">krasny_vel_at_pt</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">wpos</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">exception_index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s">'''
+        returns complex velocity at a point 
+
+        pt: location of blob at velocity is calculated
+        wpos: positions of all blobs
+        gamma, delta: circulation and delta of all blobs
+
+    '''</span>
+
+    <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="o">+</span><span class="mf">0j</span>
+    <span class="n">dz</span><span class="o">=-</span><span class="n">wpos</span><span class="o">+</span><span class="n">pt</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wpos</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">k</span><span class="o">!=</span> <span class="n">exception_index</span><span class="p">:</span>
+            <span class="n">v</span><span class="o">=</span> <span class="n">v</span><span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mf">1j</span><span class="o">*</span><span class="n">dz</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">conjugate</span><span class="p">()</span><span class="o">*</span><span class="n">gamma</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span>  <span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">conjugate</span><span class="p">()))</span> <span class="o">+</span> <span class="n">delta</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> <span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">v</span><span class="p">.</span><span class="n">conjugate</span><span class="p">()</span>
+
+</code></pre></div></div>
+<p>Now let’s have a look at overall implementation instead of individual functions. As mentioned earlier, to implement using operator splitting, we use the following algorithm. One iteration is-</p>
+<ol>
+  <li>Find velocity on the boundary of the fluid.</li>
+  <li>Introduce blobs at the boundary to satisfy no slip</li>
+  <li>Advect old blobs.</li>
+  <li>Diffuse all blobs.</li>
+  <li>Reflect or delete all the blobs inside cylinder</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">one_iter</span><span class="p">(</span><span class="n">v_inf</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">gmax</span><span class="p">,</span> <span class="n">npan</span><span class="p">,</span> <span class="n">b_pos</span><span class="p">,</span> <span class="n">b_gamma</span><span class="p">,</span> <span class="n">cpt</span><span class="p">,</span> <span class="n">cpt_b</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+    <span class="s">'''
+        one iteration for simulation with viscous flow
+    '''</span>
+    
+    <span class="n">gamma_panel</span><span class="p">,</span> <span class="n">b_gamma_new</span><span class="p">,</span> <span class="n">b_pos_new</span> <span class="o">=</span> <span class="n">get_p_and_b</span><span class="p">(</span><span class="n">b_pos</span><span class="p">,</span> <span class="n">b_gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">v_inf</span><span class="p">,</span> <span class="n">cpt</span><span class="p">,</span> <span class="n">cpt_b</span><span class="p">,</span> <span class="n">panels</span><span class="p">,</span> <span class="n">gmax</span><span class="p">)</span>
+    
+    <span class="n">b_pos</span><span class="o">=</span><span class="n">advect</span><span class="p">(</span><span class="n">b_pos_new</span> <span class="p">,</span><span class="n">b_gamma_new</span> <span class="p">,</span><span class="n">b_pos</span><span class="p">,</span> <span class="n">b_gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">panels</span><span class="p">,</span> <span class="n">gamma_panel</span><span class="p">,</span> <span class="n">v_inf</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">cpt</span><span class="p">,</span> <span class="n">cpt_b</span><span class="p">,</span> <span class="n">gmax</span><span class="p">)</span>
+
+    <span class="n">reflect</span><span class="p">(</span><span class="n">b_pos</span><span class="p">)</span>
+    
+    <span class="n">b_pos</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">b_pos</span><span class="p">,</span> <span class="n">b_pos_new</span><span class="p">))</span>
+
+    <span class="n">b_gamma</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">b_gamma</span><span class="p">,</span> <span class="n">b_gamma_new</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b_pos</span><span class="p">))</span>
+    
+    <span class="n">b_pos</span><span class="o">=</span><span class="n">diffuse</span><span class="p">(</span><span class="n">b_pos</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">reflect</span><span class="p">(</span><span class="n">b_pos</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">b_pos</span><span class="p">,</span> <span class="n">b_gamma</span>
+        
+</code></pre></div></div>
+<h2 id="results">Results</h2>
+
+<p>The simulation looks like this!!</p>
+
+<!-- [<img src="/img/master.gif" width="800"/>](/img/master.gif) -->
+
+<iframe width="907" height="397" src="https://www.youtube.com/embed/SE9kUbG_cf4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<p>Before going to get to that final simulation, I performed boundaryless simulations of vortex sheets and patches have a look at some of them.</p>
+
+<iframe width="873" height="491" src="https://www.youtube.com/embed/s2dbctRlhdQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<p>For further details, visit my repository <a href="https://github.com/aerorohit/Vortex_method">here</a>.</p>
+
+<p>Thank</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container" style="background-color:rgb(120, 124, 123);">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto" >
+        <ul class="list-inline text-center">
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.facebook.com/rohittembhare13">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/aerorohit">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; Rohit 2020</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/clean-blog.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>
