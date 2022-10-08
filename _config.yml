@@ -36,11 +36,11 @@ url: https://aerorohit.github.io  # the base hostname and protocol for your site
 plugins:
   - jekyll-feed
   - jekyll-spaceship
-  # - jekyll-remote-theme
-  # - jekyll-include-cache
+  - jekyll-remote-theme
+  - jekyll-include-cache
 
-theme: minimal-mistakes-jekyll
-# remote_theme: https://github.com/mmistakes/minimal-mistakes
+# theme: minimal-mistakes-jekyll
+remote_theme: https://github.com/mmistakes/minimal-mistakes
 
 # Exclude from processing.
 # The following items will not be processed, by default.
