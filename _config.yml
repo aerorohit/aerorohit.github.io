@@ -28,6 +28,10 @@ description: >- # this means to ignore newlines until "baseurl:"
 domain: aerorohit.github.io       # if you want to force HTTPS, specify the domain without the http at the start, e.g. example.com
 url: https://aerorohit.github.io  # the base hostname and protocol for your site, e.g. http://example.com
 
+
+encoding: utf-8 # Make sure the encoding is right
+logo: "/assets/logo.svg" # Site logo
+
 # baseurl: "" # the subpath of your site, e.g. /blog
 # twitter_username: jekyllrb
 # github_username:  aerorohit
@@ -38,10 +42,15 @@ plugins:
   - jekyll-spaceship
   - jekyll-remote-theme
   - jekyll-include-cache
+  - jekyll-paginate
+
 
 # theme: minimal-mistakes-jekyll
-remote_theme: https://github.com/mmistakes/minimal-mistakes
+# theme: garth-jekyll-theme
+# remote_theme: https://github.com/mmistakes/minimal-mistakes
+remote_theme: daviddarnes/garth
 
+markdown: kramdown
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
@@ -50,14 +59,49 @@ remote_theme: https://github.com/mmistakes/minimal-mistakes
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
-# exclude:
-#   - .sass-cache/
-#   - .jekyll-cache/
-#   - gemfiles/
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules/
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+
+# 3. Gem settings
+paginate: 7 # jekyll-paginate > items per page
+paginate_path: page:num # jekyll-paginate > blog page
+
+# 4. Jekyll settings
+sass:
+  style: compressed # Style compression
+permalink: pretty  # Permalink style (/YYYY/MM/DD/page-name/)
+excerpt_separator: <!-- more --> # Marks end of excerpt in posts
+timezone: Europe/London # Timezone for blog posts and alike
+
+
+# 5. Collections
+collections:
+  posts:
+    title: Blog # Needed for Siteleaf
+    output: true
+    # description: "This is merely a demo, find out more" # The post list page content
+
+# 6. Jekyll collections settings
+defaults:
+  -
+    scope:
+      path: ""
+      type: pages
+    values:
+      layout: page # Default layout
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post # Default layout
