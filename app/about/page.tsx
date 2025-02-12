@@ -1,12 +1,12 @@
 import Image from "next/image"
-import { Github, Twitter, Linkedin } from "lucide-react"
+import { Github, X, Linkedin } from "lucide-react"
 
 export default function About() {
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-48 h-48 mb-8">
         <Image
-          src="/resources/profile.png"
+          src="/resources/profile.jpeg"
           alt="Profile Picture"
           fill
           className="rounded-full object-cover"
@@ -19,21 +19,21 @@ export default function About() {
       </p>
       <div className="flex space-x-6">
         <a
-          href="https://twitter.com/yourusername"
+          href="https://x.com/aerorohit73"
           className="text-monokai-text hover:text-monokai-yellow transition-colors"
-          aria-label="Twitter"
+          aria-label="X"
         >
-          <Twitter size={24} />
+          <X size={24} />
         </a>
         <a
-          href="https://github.com/yourusername"
+          href="https://github.com/aerorohit"
           className="text-monokai-text hover:text-monokai-yellow transition-colors"
           aria-label="GitHub"
         >
           <Github size={24} />
         </a>
         <a
-          href="https://linkedin.com/in/yourusername"
+          href="https://linkedin.com/in/aerorohit"
           className="text-monokai-text hover:text-monokai-yellow transition-colors"
           aria-label="LinkedIn"
         >

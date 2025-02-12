@@ -7,8 +7,8 @@ import type React from "react"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "My Blog",
-  description: "A simple blog with a dark Monokai-inspired theme",
+  title: "aerorohit",
+  description: "Rohit Tembhare's blog",
 }
 
 export default function RootLayout({

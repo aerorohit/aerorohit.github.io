@@ -6,6 +6,9 @@ const nextConfig = {
     // If using a project repository (<username>.github.io/<repo-name>)
     // basePath: 'aerorohit.github.io',
     assetPrefix: '',
+    images: {
+        unoptimized: true,
+    },
 };
 
 export default nextConfig;
