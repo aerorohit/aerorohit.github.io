@@ -14,8 +14,7 @@ export default function About() {
       </div>
       <h1 className="text-3xl font-bold mb-4 text-monokai-pink">About Me</h1>
       <p className="text-monokai-text max-w-2xl text-center mb-8">
-        Hello! I'm a passionate developer and writer. I love exploring new technologies and sharing my knowledge through
-        this blog. When I'm not coding, you can find me reading sci-fi novels or hiking in the great outdoors.
+      Hello! I'm a software developer currently working at Uber. I hold both a Bachelor's and Master's degree in Aerospace Engineering. My interests include programming, computational fluid dynamics and robotics. I started this blog to document new things I learn along the way.
       </p>
       <div className="flex space-x-6">
         <a
