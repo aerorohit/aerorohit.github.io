@@ -2,12 +2,13 @@
   "name": "blackbird-blog",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://aerorohit.in",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && touch out/.nojekyll",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "gh-pages -d out -t"
+    "deploy": "gh-pages -d out -t --nojekyll --cname aerorohit.in"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.16",
