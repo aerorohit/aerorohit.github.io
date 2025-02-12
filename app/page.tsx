@@ -10,7 +10,7 @@ export default async function Home() {
       <div className="md:w-1/3 mb-8 md:mb-0 md:pr-8">
         <h1 className="text-3xl font-bold mb-4 text-monokai-orange">Rohit Tembhare's website</h1>
         <p className="text-monokai-text">
-          Jotting down thoughts as they come. I am a software developer at Uber with interests in programming and computational fluid dynamics. I am also exploring robotics and AI.
+        Sharing my thoughts as they come. I’m a software developer at Uber, passionate about programming and computational fluid dynamics, with an ongoing exploration of robotics and AI.
         </p>
       </div>
       <div className="md:border-l md:border-monokai-lighter md:pl-8 md:w-2/3">
